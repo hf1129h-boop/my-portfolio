@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品集 | Portfolio</title>
+    <style>
+        /* ==========================================================================
+           1. 核心全局样式 (复刻参考图的柔和、清爽法式色调)
+           ========================================================================== */
+        :root {
+            --bg-color: #F7F9FB;       /* 极简淡灰蓝背景 */
+            --primary-blue: #5C88BE;   /* 参考图标志性莫兰迪蓝 */
+            --light-blue: #EBF2F7;     /* 卡片与按钮的浅蓝底色 */
+            --text-dark: #4A5568;      /* 深灰文本，比纯黑更温柔 */
+            --text-light: #718096;     /* 辅助说明文本 */
+            --white: #FFFFFF;
+            --radius-lg: 24px;         /* 参考图特有的圆润大圆角 */
+            --radius-sm: 12px;
+            --shadow: 0 10px 30px rgba(92, 136, 190, 0.06); /* 极其轻柔的蓝色阴影 */
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ==========================================================================
+           2. 导航栏 (Navigation)
+           ========================================================================== */
+        header {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(92, 136, 190, 0.1);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 15px;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary-blue);
+        }
+
+        /* 导航线动画 */
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-blue);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 60%;
+        }
+
+        /* ==========================================================================
+           3. 页面主体容器 (带有页面切换的隐藏/显示逻辑)
+           ========================================================================== */
+        main {
+            max-width: 1200px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+        }
+
+        /* 核心切换逻辑：未激活的页面隐藏，并带有淡入淡出动画 */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==========================================================================
+           4. 组件样式 (通用按钮、卡片等)
+           ========================================================================== */
+        .btn {
+            display: inline-block;
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 1px solid rgba(92, 136, 190, 0.3);
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(92, 136, 190, 0.2);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #4a75aa;
+        }
+
+        /* ==========================================================================
+           5. 首页 / 个人介绍页面 (Home Section)
+           ========================================================================== */
+        .hero-banner {
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--light-blue) 100%);
+            border-radius: var(--radius-lg);
+            padding: 80px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 60px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-info {
+            flex: 1;
+            max-width: 550px;
+        }
+
+        .hero-info h1 {
+            font-size: 48px;
+            color: var(--primary-blue);
+            font-weight: 400;
+            letter-spacing: 3px;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .hero-info p {
+            color: var(--text-light);
+            font-size: 16px;
+            margin-bottom: 35px;
+            text-align: justify;
+        }
+
+        .hero-image-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 占位图样式，可用您自己的艺术图/摄影替换 */
+        .placeholder-img {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            border: 8px solid rgba(255,255,255,0.6);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .hero-img {
+            width: 380px;
+            height: 380px;
+        }
+
+        /* 首页案例展示区域（3个案例入口） */
+        .section-title {
+            font-size: 32px;
+            color: var(--primary-blue);
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .case-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(92, 136, 190, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .case-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(92, 136, 190, 0.12);
+        }
+
+        .case-card .card-img {
+            width: 100%;
+            height: 24px0px;
+            height: 240px;
+            margin-bottom: 20px;
+        }
+
+        .case-card h3 {
+            font-size: 20px;
+            color: var(--primary-blue);
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .case-card p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        /* ==========================================================================
+           6. 案例详情通用页面样式 (Case Details Template)
+           ========================================================================== */
+        .case-detail-container {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 50px;
+            box-shadow: var(--shadow);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--light-blue);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        .case-header-left h2 {
+            font-size: 36px;
+            color: var(--primary-blue);
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .case-meta {
+            font-size: 18px;
+            color: #A0AEC0;
+            font-weight: 300;
+        }
+
+        .case-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .case-main-img {
+            width: 100%;
+            height: 450px;
+        }
+
+        .case-desc h4 {
+            font-size: 18px;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .case-desc p {
+            color: var(--text-light);
+            font-size: 15px;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        /* 底部相关作品推荐 */
+        .related-section {
+            margin-top: 50px;
+            border-top: 1px solid var(--light-blue);
+            padding-top: 30px;
+        }
+
+        .related-title {
+            font-size: 14px;
+            color: #A0AEC0;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .related-flex {
+            display: flex;
+            gap: 20px;
+        }
+
+        .related-item {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .related-item:hover {
+            transform: scale(1.08);
+            border-color: var(--primary-blue);
+        }
+
+        /* ==========================================================================
+           7. 瀑布流多案例展示页面 (Masonry Gallery)
+           ========================================================================== */
+        .masonry-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .masonry-header {
+            flex: 0 0 300px;
+            padding-top: 20px;
+        }
+
+        .masonry-header h2 {
+            font-size: 36px;
+            color: var(--primary-blue);
+            font-weight: 400;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .masonry-header .case-meta {
+            font-size: 16px;
+            color: #A0AEC0;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .masonry-header p {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .masonry-return-btn {
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .masonry-gallery {
+            flex: 1;
+            column-count: 2;
+            column-gap: 30px;
+        }
+
+        .page-section.page-long-image .page-image-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-section.page-long-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .page-section.page-long-image .page-full-image {
+            padding: 40px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 140px);
+        }
+
+        .page-section.page-long-image .page-full-image .btn {
+            margin-top: 20px;
+        }
+
+        .masonry-item {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            transition: var(--transition);
+            break-inside: avoid;
+            cursor: pointer;
+        }
+
+        .masonry-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(92, 136, 190, 0.12);
+        }
+
+        .masonry-item-img {
+            width: 100%;
+            height: 200px;
+            background-color: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 13px;
+            overflow: hidden;
+        }
+
+        .masonry-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .masonry-item-content {
+            padding: 20px;
+        }
+
+        .masonry-item-title {
+            font-size: 16px;
+            color: var(--primary-blue);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .masonry-item-desc {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1200px) {
+            .masonry-gallery {
+                column-count: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .masonry-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .masonry-header {
+                flex: 1;
+                padding-top: 0;
+            }
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 968px) {
+            .hero-banner, .case-layout {
+                flex-direction: column;
+                grid-template-columns: 1fr;
+                padding: 40px 30px;
+            }
+            .cases-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">portfolio</div>
+        <nav>
+            <a onclick="switchPage('home')" id="nav-home" class="active">首页 / 介绍</a>
+            <a onclick="switchPage('case1')" id="nav-case1">品牌营销设计</a>
+            <a onclick="switchPage('case2')" id="nav-case2">包装设计</a>
+            <a onclick="switchPage('case3')" id="nav-case3">插画案例</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section id="page-home" class="page-section active">
+            <div class="hero-banner">
+                <div class="hero-info">
+                    <h1>何峰<br>HeFeng</h1>
+                    <p>拥有5年经验设计师，善于将品牌策略转化为强有力的视觉语言，通过线上（公众号、活动/节日宣发）与线下（终端门店广宣、空间视觉规范）触点，打造一致且深刻的品牌体验。具备品牌营销思维，理解市场目标与用户行为，并能将行为经济学原理融入设计决策，提升视觉沟通的转化力与影响力。</p>
+                    <a onclick="switchPage('case1')" class="btn btn-primary">探索案例</a>
+                </div>
+                <div class="hero-image-wrapper">
+                    <img src="images/核心主图.jpg" alt="核心形象主图" class="hero-img" />
+                </div>
+            </div>
+
+            <h2 class="section-title">Productos / 经典案例</h2>
+            <div class="cases-grid">
+                
+                <div class="case-card">
+                    <img src="images/品牌营销设计封面.jpg" alt="品牌营销设计" class="card-img" />
+                    <h3>01 / 品牌营销设计</h3>
+                    <p>深入品牌策略研究，通过创意视觉传达品牌核心价值，打造具有影响力的市场形象。</p>
+                    <button onclick="switchPage('case1')" class="btn">查看详情</button>
+                </div>
+
+                <div class="case-card">
+                    <img src="images/包装设计封面.jpg" alt="包装设计" class="card-img" />
+                    <h3>02 / 包装设计</h3>
+                    <p>将产品理念融入包装设计，创造消费者的首次触碰体验，每一处细节都传递品牌气质。</p>
+                    <button onclick="switchPage('case2')" class="btn">查看详情</button>
+                </div>
+
+                <div class="case-card">
+                    <img src="images/插画案例封面.jpg" alt="插画案例" class="card-img" />
+                    <h3>03 / 插画案例</h3>
+                    <p>运用插画创意为品牌增添温度，将复杂理念转化为易理解的视觉语言。</p>
+                    <button onclick="switchPage('case3')" class="btn">查看详情</button>
+                </div>
+
+            </div>
+        </section>
+
+
+        <section id="page-case1" class="page-section">
+            <div class="case-detail-container">
+                <div class="case-header">
+                    <div class="case-header-left">
+                        <h2>品牌营销设计</h2>
+                        <div class="case-meta">Brand Marketing / 01</div>
+                    </div>
+                    <button onclick="switchPage('home')" class="btn">返回首页</button>
+                </div>
+                <div class="masonry-container">
+                    <div class="masonry-gallery">
+                        <div class="masonry-item" onclick="switchPage('case1-1')">
+                            <div class="masonry-item-img"><img src="images/芒果季封面.jpg" alt="芒果季视觉设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">芒果季视觉设计</div>
+                                <div class="masonry-item-desc">线下终端形象建设与统一视觉标准</div>
+                            </div>
+                        </div>
+                        <div class="masonry-item" onclick="switchPage('case1-2')">
+                            <div class="masonry-item-img"><img src="images/软欧包封面.jpg" alt="软欧包项目视觉设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">软欧包项目视觉设计</div>
+                                <div class="masonry-item-desc">面包产品视觉设计，提升烘焙品牌的温暖质感与诱惑力</div>
+                            </div>
+                        </div>
+                        <div class="masonry-item" onclick="switchPage('case1-3')">
+                            <div class="masonry-item-img"><img src="images/必吃榜封面.jpg" alt="产品TOP榜视觉设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">产品TOP榜视觉设计</div>
+                                <div class="masonry-item-desc">完整的品牌识别系统，包括Logo、色彩规范、字体应用</div>
+                            </div>
+                        </div>
+                        <div class="masonry-item" onclick="switchPage('case1-4')">
+                            <div class="masonry-item-img"><img src="images/社交媒体封面.jpg" alt="社交媒体内容设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">社交媒体内容设计</div>
+                                <div class="masonry-item-desc">公众号、小红书等平台的品牌内容视觉</div>
+                            </div>
+                        </div>
+                        <div class="masonry-item" onclick="switchPage('case1-5')">
+                            <div class="masonry-item-img"><img src="images/中秋封面.jpg" alt="中秋项目视觉设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">中秋项目视觉设计</div>
+                                <div class="masonry-item-desc">节庆主题视觉方案，打造浓郁节日氛围与品牌辨识度</div>
+                            </div>
+                        </div>
+                        <div class="masonry-item" onclick="switchPage('case1-6')">
+                            <div class="masonry-item-img"><img src="images/七夕封面.jpg" alt="七夕项目视觉设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">七夕项目视觉设计</div>
+                                <div class="masonry-item-desc">浪漫主题视觉表达，提升节日营销的情感共鸣力</div>
+                            </div>
+                        </div>
+                        <div class="masonry-item" onclick="switchPage('case1-7')">
+                            <div class="masonry-item-img"><img src="images/能量碗封面.jpg" alt="水果碗项目视觉设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">水果碗项目视觉设计</div>
+                                <div class="masonry-item-desc">清新美味的产品视觉打造，强化品牌与健康生活的连接</div>
+                            </div>
+                        </div>
+                        <div class="masonry-item" onclick="switchPage('case1-8')">
+                            <div class="masonry-item-img"><img src="images/营销活动封面.jpg" alt="营销活动海报设计" /></div>
+                            <div class="masonry-item-content">
+                                <div class="masonry-item-title">营销活动海报设计</div>
+                                <div class="masonry-item-desc">应季主题创意，高转化的视觉传达策略</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-case1-1" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/芒果季内容图1.jpg" alt="芒果季视觉设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case1-2" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/软欧包内容图.jpg" alt="软欧包项目视觉设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case1-3" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/TOP榜内容图.jpg" alt="产品TOP榜视觉设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case1-4" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/社交媒体内容图.jpg" alt="社交媒体内容设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case1-5" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/品牌营销设计封面.jpg" alt="中秋项目视觉设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case1-6" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/品牌营销设计封面.jpg" alt="七夕项目视觉设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case1-7" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/酸奶碗内容图.jpg" alt="水果碗项目视觉设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case1-8" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/营销活动内容图.jpg" alt="营销活动海报设计" />
+                </div>
+                <button onclick="switchPage('case1')" class="btn">返回案例</button>
+            </div>
+        </section>
+
+        <section id="page-case2" class="page-section">
+            <div class="masonry-container">
+                <div class="masonry-header">
+                    <h2>包装<br>设计</h2>
+                    <div class="case-meta">Packaging Design / 02</div>
+                    <p>将产品理念融入包装设计，创造消费者的首次触碰体验。从材料选择到排版设计，每一处细节都传递品牌气质。</p>
+                    <button onclick="switchPage('home')" class="btn masonry-return-btn">返回首页</button>
+                </div>
+                <div class="masonry-gallery">
+                    <div class="masonry-item" onclick="switchPage('case2-1')">
+                        <div class="masonry-item-img"><img src="images/月饼礼盒封面.jpg" alt="月饼礼盒设计" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">月饼礼盒设计</div>
+                            <div class="masonry-item-desc">高端食品包装设计，兼顾美感与功能</div>
+                        </div>
+                    </div>
+                    <div class="masonry-item" onclick="switchPage('case2-2')">
+                        <div class="masonry-item-img"><img src="images/饮品包装封面.jpg" alt="饮品包装设计" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">饮品包装设计</div>
+                            <div class="masonry-item-desc">高级感护肤品盒体与内页设计</div>
+                        </div>
+                    </div>
+                    <div class="masonry-item" onclick="switchPage('case2-3')">
+                        <div class="masonry-item-img"><img src="images/冰面包包装封面.jpg" alt="冰面包包装设计" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">冰面包包装设计</div>
+                            <div class="masonry-item-desc">节庆限定版包装设计与打样</div>
+                        </div>
+                    </div>
+                    <div class="masonry-item" onclick="switchPage('case2-4')">
+                        <div class="masonry-item-img"><img src="images/七夕包装封面.jpg" alt="七夕月饼礼盒设计" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">七夕月饼礼盒设计</div>
+                            <div class="masonry-item-desc">产品附属物料的品牌视觉延伸</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-case2-1" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/月饼礼盒内容图.jpg" alt="月饼礼盒设计" />
+                </div>
+                <button onclick="switchPage('case2')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case2-2" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/饮品包装封面.jpg" alt="饮品包装设计" />
+                </div>
+                <button onclick="switchPage('case2')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case2-3" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/冰面包包装内容图.jpg" alt="冰面包包装设计" />
+                </div>
+                <button onclick="switchPage('case2')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case2-4" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/七夕包装封面.jpg" alt="七夕月饼礼盒设计" />
+                </div>
+                <button onclick="switchPage('case2')" class="btn">返回案例</button>
+            </div>
+        </section>
+
+
+        <section id="page-case3" class="page-section">
+            <div class="masonry-container">
+                <div class="masonry-header">
+                    <h2>插画<br>案例</h2>
+                    <div class="case-meta">Illustration / 03</div>
+                    <p>运用插画创意为品牌增添温度，将复杂理念转化为易理解的视觉语言。风格灵活适配多种应用场景。</p>
+                    <button onclick="switchPage('home')" class="btn masonry-return-btn">返回首页</button>
+                </div>
+                <div class="masonry-gallery">
+                    <div class="masonry-item" onclick="switchPage('case3-1')">
+                        <div class="masonry-item-img"><img src="images/插画案例封面.jpg" alt="品牌设计" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">品牌设计</div>
+                            <div class="masonry-item-desc">可爱IP形象与系列插画创作</div>
+                        </div>
+                    </div>
+                    <div class="masonry-item" onclick="switchPage('case3-2')">
+                        <div class="masonry-item-img"><img src="images/插画案例封面.jpg" alt="伴手礼插画设计" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">伴手礼插画设计</div>
+                            <div class="masonry-item-desc">为伴手礼礼盒与赠品创作插画，增强礼品的情感价值</div>
+                        </div>
+                    </div>
+                    <div class="masonry-item" onclick="switchPage('case3-3')">
+                        <div class="masonry-item-img"><img src="images/插画案例封面.jpg" alt="大米包装设计" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">大米包装设计</div>
+                            <div class="masonry-item-desc">应季创意插画与装饰性图案</div>
+                        </div>
+                    </div>
+                    <div class="masonry-item" onclick="switchPage('case3-4')">
+                        <div class="masonry-item-img"><img src="images/插画案例封面.jpg" alt="插画分享" /></div>
+                        <div class="masonry-item-content">
+                            <div class="masonry-item-title">插画分享</div>
+                            <div class="masonry-item-desc">展示原创插画创作与艺术风格探索</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 插画案例详情页面 -->
+        <section id="page-case3-1" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/插画案例封面.jpg" alt="品牌设计" />
+                </div>
+                <button onclick="switchPage('case3')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case3-2" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/插画案例封面.jpg" alt="伴手礼插画设计" />
+                </div>
+                <button onclick="switchPage('case3')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case3-3" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/插画案例封面.jpg" alt="大米包装设计" />
+                </div>
+                <button onclick="switchPage('case3')" class="btn">返回案例</button>
+            </div>
+        </section>
+        <section id="page-case3-4" class="page-section page-long-image">
+            <div class="page-full-image">
+                <div class="page-image-wrapper">
+                    <img src="images/插画案例封面.jpg" alt="插画分享" />
+                </div>
+                <button onclick="switchPage('case3')" class="btn">返回案例</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function switchPage(pageId) {
+            // 1. 隐藏所有页面章节
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 2. 取消所有导航链接的激活状态
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // 3. 激活当前选中的页面并平滑显示
+            const targetSection = document.getElementById('page-' + pageId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // 4. 激活对应的导航栏高亮
+            const targetNavLink = document.getElementById('nav-' + pageId);
+            if (targetNavLink) {
+                targetNavLink.classList.add('active');
+            }
+
+            // 5. 切换页面后自动平滑滚动回顶部
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
